@@ -1,0 +1,51 @@
+<html lang="en">
+<head>
+<title>Ws Client</title>
+<script type="application/x-javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js">
+</script>
+<script type="application/x-javascript">
+var ws;
+
+$(document).ready(function() {
+    $('#msg-form').submit(function(ev) {
+        ws.send($('#msg').val());
+        $('#msg').val('').focus();
+        return false; 
+    });
+
+    ws = new MozWebSocket('ws://localhost:8090');
+    ws.onmessage = function(ev) {
+        console.log('got an event!');
+        //var pkg = JSON.parse(ev.data);
+        //$('#log pre').html(d(pkg));
+        l(ev.data);
+    }
+
+    $('#msg').val('').focus();
+});
+
+var l = function(s) {
+    var d = new Date();
+    $('#log').append(d.toTimeString()+ '> '+s+"\n");
+}
+
+var d = function(o) {
+    return JSON.stringify(o, ' ', 4);
+}
+
+
+</script>
+</head>
+<body>
+
+<div id="main">
+<form method="post" action="#" id="msg-form">
+    <input type="text" name="msg" id="msg" style="width: 90%;"/>
+    <input type="submit" name="sub" id="sub" value="send"> 
+</form></div>
+<div><pre id="log" style="overflow: auto; background-color: #EFEFEF; border: 1px solid #DCDCDC; height: 600px;">
+    
+</pre></div> 
+</body>
+</html>
