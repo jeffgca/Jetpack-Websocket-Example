@@ -6,8 +6,6 @@ ws.onmessage = function(ev) {
 }
 
 self.port.on("message", function(ev) {
+    console.log("got message in worker: "+ev);
     ws.send(ev);
 });
-var count = 0;
-
-window.setInterval(function() { ws.send("message: " + count++); }, 5000);
