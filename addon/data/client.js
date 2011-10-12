@@ -2,9 +2,8 @@
 $(document).ready(function() {
     $('#send_msg').click(function() {
         var m = $('#msg').val();
-        //console.log(m);
+        console.log(m);
         self.postMessage(m);
-        return false;  
     })
 });
 
