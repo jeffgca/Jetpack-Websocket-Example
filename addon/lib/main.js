@@ -27,9 +27,7 @@ myPanel.on("show", function() {
 });
 
 wsWorker.on('message', function(m) {
-    L("got message from ws: "+m);
-    L(myPanel);
-    myPanel.postMessage(m);
+    myPanel.port.emit("wsmessage", m);
 });
 
 require("widget").Widget({
