@@ -1,9 +1,7 @@
 <html lang="en">
 <head>
 <title>Ws Client</title>
-<script type="application/x-javascript"
-        src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js">
-</script>
+<script type="application/x-javascript" src="./jquery.min.js"></script>
 <script type="application/x-javascript">
 var ws;
 
@@ -16,9 +14,6 @@ $(document).ready(function() {
 
     ws = new MozWebSocket('ws://localhost:8090');
     ws.onmessage = function(ev) {
-        console.log('got an event!');
-        //var pkg = JSON.parse(ev.data);
-        //$('#log pre').html(d(pkg));
         l(ev.data);
     }
 
