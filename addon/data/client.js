@@ -1,12 +1,23 @@
 
+var L = console.log;
+
 $(document).ready(function() {
-    $('#send_msg').click(function() {
+    $('#client-form').submit(function() {
         var m = $('#msg').val();
-        console.log(m);
         self.postMessage(m);
-    })
+        $('#msg').val("").focus();
+        return false;
+    });
 });
 
-self.port.on("message", function(m) {
-    $('#log').append(m+"\n");
+var PREFIX = ">> ";
+
+self.port.on("wsmessage", function(m) {
+    
+    L("got message in content script: "+m);
+    $('#log').append(PREFIX+m+"\n");
+});
+
+self.port.on("showing", function() {
+    $('#msg').val("").focus();
 });
