@@ -2,35 +2,39 @@ var data = require("self").data;
 var pageWorkers = require("page-worker");
 var tabs = require("tabs");
 
-var worker = pageWorkers.Page({
+var wsWorker = pageWorkers.Page({
     contentUrl: data.url('worker.html'),
     contentScriptFile: data.url('worker.js')
 });
 
-worker.on('message', function(m) {
-    console.log("Message from worker:" + m);
-});
-
-worker.on('error', function(err) {
-    console.log(err);
-});
+var L = console.log;
 
 var client_Url = data.url("client.html");
+
+var myPanel = require("panel").Panel({
+    width: 500,
+    height: 300,
+    contentURL: data.url('client.html'),
+    contentScriptFile: [data.url('jquery.min.js'), data.url('client.js')]
+});
+
+myPanel.on('message', function(m) {
+    wsWorker.port.emit('message', m);
+})
+
+myPanel.on("show", function() {
+    this.port.emit("showing", true);
+});
+
+wsWorker.on('message', function(m) {
+    L("got message from ws: "+m);
+    L(myPanel);
+    myPanel.postMessage(m);
+});
 
 require("widget").Widget({
     id: "mozilla-icon",
     label: "Open the Websocket Client Page",
     contentURL: "http://www.mozilla.org/favicon.ico",
-    onClick: function() {
-        tabs.open(client_Url);
-    }
-});
-
-tabs.on("ready", function(tab) {
-    var tabWorker = tab.attach({
-        contentScriptFile: [ data.url('jquery.min.js'), data.url('client.js') ]
-    });
-    tabWorker.on("message", function(m) {
-        worker.postMessage(m);
-    });
+    panel: myPanel
 });
